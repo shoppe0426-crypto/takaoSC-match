@@ -4,87 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高尾SC 試合結果速報ツール</title>
-    <!-- デザインを綺麗にするためのTailwind CSS -->
+    <!-- デザインを劇的に綺麗にするためのTailwind CSS -->
     <script src="https://tailwindcss.com"></script>
     <style>
-        body { background-color: #0b132b; color: #ffffff; }
+        body { background-color: #0b132b; color: #f8fafc; }
+        /* 入力フォームのプレースホルダーの色調整 */
+        ::placeholder { color: #64748b !important; opacity: 1; }
     </style>
 </head>
 <body class="p-4 font-sans max-w-md mx-auto">
 
     <!-- ヘッダー -->
     <div class="text-center my-6">
-        <h1 class="text-2xl font-bold text-yellow-400">高尾SC 試合結果速報</h1>
-        <p class="text-xs text-gray-400 mt-1">トレーニングマッチ・公式戦 記録用</p>
+        <h1 class="text-2xl font-black tracking-wider text-amber-400 drop-shadow-md">TAKAO SC</h1>
+        <p class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mt-1">Match Result Bulletin</p>
     </div>
 
     <!-- 試合登録フォームエリア -->
-    <div class="bg-[#1c2541] rounded-lg p-4 mb-6 shadow-lg border border-gray-700">
-        <h2 class="font-bold text-sm text-yellow-400 mb-3">📝 新しい試合の登録</h2>
-        <div class="space-y-3 text-xs">
-            <!-- 日付入力 -->
+    <div class="bg-[#1c2541] rounded-2xl p-5 mb-8 shadow-2xl border border-slate-700/50">
+        <div class="flex items-center gap-2 mb-4 border-b border-slate-700/60 pb-2">
+            <span class="text-lg">📝</span>
+            <h2 class="font-extrabold text-sm text-slate-200">新しい試合の登録</h2>
+        </div>
+        
+        <div class="space-y-4 text-xs">
+            <!-- 試合日入力 -->
             <div>
-                <label class="block text-gray-400 mb-1 font-semibold">試合日</label>
-                <input type="date" id="matchDate" class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white font-bold">
+                <label class="block text-slate-400 mb-1 font-bold">試合日</label>
+                <input type="date" id="matchDate" class="w-full p-2.5 bg-[#0f172a] border border-slate-600 rounded-lg text-white font-bold focus:outline-none focus:border-amber-400 text-sm">
             </div>
 
             <!-- 対戦カード入力 -->
-            <div class="flex items-center justify-between gap-2 bg-[#111a36] p-3 rounded border border-gray-800">
+            <div class="bg-[#111a36] p-4 rounded-xl border border-slate-800 flex items-center justify-between gap-3 shadow-inner">
+                <!-- 高尾SC側 -->
                 <div class="w-2/5 text-center">
-                    <span class="block font-bold text-sm text-blue-400">高尾SC</span>
-                    <input type="number" id="scoreTakao" placeholder="0" class="w-14 p-1 mt-1 text-center bg-gray-900 border border-gray-700 rounded font-bold text-lg text-white">
+                    <span class="block font-black text-sm text-sky-400 tracking-wide mb-1.5">高尾SC</span>
+                    <input type="number" id="scoreTakao" placeholder="0" class="w-16 p-2 text-center bg-[#0f172a] border border-slate-600 rounded-lg font-black text-xl text-white focus:outline-none focus:border-sky-400">
                 </div>
-                <div class="text-gray-500 font-bold text-sm">VS</div>
+                
+                <div class="text-slate-500 font-black text-xs tracking-tighter mt-4">VS</div>
+                
+                <!-- 相手チーム側 -->
                 <div class="w-2/5 text-center">
-                    <input type="text" id="opponentName" placeholder="相手チーム名" class="w-full p-1 text-center bg-gray-900 border border-gray-700 rounded text-white font-semibold placeholder-gray-600">
-                    <input type="number" id="scoreOpponent" placeholder="0" class="w-14 p-1 mt-1 text-center bg-gray-900 border border-gray-700 rounded font-bold text-lg text-white">
+                    <input type="text" id="opponentName" placeholder="相手チーム名" class="w-full p-1.5 text-center bg-[#0f172a] border border-slate-600 rounded-md text-white font-bold text-xs focus:outline-none focus:border-amber-400 placeholder-slate-500">
+                    <input type="number" id="scoreOpponent" placeholder="0" class="w-16 p-2 mt-1.5 text-center bg-[#0f172a] border border-slate-600 rounded-lg font-black text-xl text-white focus:outline-none focus:border-amber-400">
                 </div>
             </div>
 
             <!-- 詳細情報入力 -->
-            <div class="grid grid-cols-2 gap-2">
+            <div class="space-y-3">
                 <div>
-                    <label class="block text-gray-400 mb-1 font-semibold">高尾SC 得点者</label>
-                    <input type="text" id="goalScorers" placeholder="例：サトシ2, カケル" class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-600">
+                    <label class="block text-slate-400 mb-1 font-bold">⚽ 高尾SC 得点者</label>
+                    <input type="text" id="goalScorers" placeholder="例：サトシ2、カケル" class="w-full p-2.5 bg-[#0f172a] border border-slate-600 rounded-lg text-white focus:outline-none focus:border-amber-400 placeholder-slate-500">
                 </div>
                 <div>
-                    <label class="block text-gray-400 mb-1 font-semibold">GK (ゴールキーパー)</label>
-                    <input type="text" id="goalkeeper" placeholder="例：ツバサ(前半), リク(後半)" class="w-full p-2 bg-gray-900 border border-gray-700 rounded text-white placeholder-gray-600">
+                    <label class="block text-slate-400 mb-1 font-bold">🧤 GK (ゴールキーパー)</label>
+                    <input type="text" id="goalkeeper" placeholder="例：ツバサ(前半)、リク(後半)" class="w-full p-2.5 bg-[#0f172a] border border-slate-600 rounded-lg text-white focus:outline-none focus:border-amber-400 placeholder-slate-500">
                 </div>
             </div>
 
             <!-- 追加ボタン -->
-            <button onclick="addMatch()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded shadow transition-all text-sm mt-2">
-                ＋ この試合結果を追加・保存する
+            <button onclick="addMatch()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0b132b] font-black rounded-xl shadow-lg transition-all text-sm tracking-wider mt-2 uppercase">
+                ＋ 試合結果を追加する
             </button>
         </div>
     </div>
 
     <!-- 試合速報 タイムライン一覧 -->
-    <div class="flex justify-between items-center mb-3">
-        <h2 class="text-lg font-bold text-emerald-400">📊 試合結果一覧</h2>
-        <button onclick="clearAllMatches()" class="text-[10px] text-red-400 border border-red-900/50 px-2 py-1 rounded bg-red-950/20 hover:bg-red-950/50">全削除</button>
+    <div class="flex justify-between items-end mb-4 px-1">
+        <div class="flex items-center gap-2">
+            <span class="text-base">📊</span>
+            <h2 class="text-base font-black text-slate-200">試合結果一覧</h2>
+        </div>
+        <button onclick="clearAllMatches()" class="text-[10px] text-red-400 font-bold border border-red-900/40 px-2 py-1 rounded-md bg-red-950/10 hover:bg-red-950/40 transition-colors">全削除</button>
     </div>
     
-    <div id="matchTimeline" class="space-y-4 mb-12">
-        <!-- ここに登録した試合がどんどん追加されていきます -->
+    <!-- タイムライン表示エリア -->
+    <div id="matchTimeline" class="space-y-4 mb-16">
+        <!-- JSで登録されたカードがここにスタイリッシュに入ります -->
     </div>
 
-    <!-- 記録・動的処理用ロジック（JavaScript） -->
+    <!-- 記録・動的処理用ロジック -->
     <script>
-        // ページ読み込み時に初期日付を設定（11月8日などの当日に自動設定）
         window.onload = function() {
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0');
             const dd = String(today.getDate()).padStart(2, '0');
             document.getElementById('matchDate').value = `${yyyy}-${mm}-${dd}`;
-            
-            // 保存データの復元表示
             displayMatches();
         }
 
-        // 試合結果をローカルストレージに追加
         function addMatch() {
             const date = document.getElementById('matchDate').value;
             const scoreTakao = document.getElementById('scoreTakao').value;
@@ -93,9 +103,8 @@
             const scorers = document.getElementById('goalScorers').value;
             const gk = document.getElementById('goalkeeper').value;
 
-            // 入力チェック
             if (!date || scoreTakao === "" || !opponent || scoreOpponent === "") {
-                alert("試合日、相手チーム名、両チームのスコアは必ず入力してください。");
+                alert("試合日、相手チーム名、スコアは必須項目です。");
                 return;
             }
 
@@ -105,67 +114,70 @@
                 scoreTakao: parseInt(scoreTakao),
                 opponent: opponent,
                 scoreOpponent: parseInt(scoreOpponent),
-                scorers: scorers || "なし",
-                gk: gk || "未記録"
+                scorers: scorers || "ー",
+                gk: gk || "ー"
             };
 
-            // ストレージから既存リストを取得して先頭に追加
             const currentMatches = JSON.parse(localStorage.getItem('generic_soccer_matches')) || [];
-            currentMatches.unshift(matchData); // 新しい試合を一番上に
+            currentMatches.unshift(matchData);
             localStorage.setItem('generic_soccer_matches', JSON.stringify(currentMatches));
 
-            // 入力フォームをクリア（日付と相手チーム名は連続マッチ用に残す）
             document.getElementById('scoreTakao').value = "";
             document.getElementById('scoreOpponent').value = "";
             document.getElementById('goalScorers').value = "";
             document.getElementById('goalkeeper').value = "";
 
-            // 再描画
             displayMatches();
         }
 
-        // 試合結果一覧を表示
         function displayMatches() {
             const matches = JSON.parse(localStorage.getItem('generic_soccer_matches')) || [];
             const timeline = document.getElementById('matchTimeline');
             timeline.innerHTML = '';
 
             if (matches.length === 0) {
-                timeline.innerHTML = `<p class="text-xs text-center text-gray-500 py-8 bg-[#1c2541]/30 rounded-lg border border-dashed border-gray-800">登録された試合結果はありません。</p>`;
+                timeline.innerHTML = `
+                    <div class="text-center py-10 bg-[#1c2541]/20 rounded-2xl border border-dashed border-slate-700/60">
+                        <p class="text-xs text-slate-500 font-bold">登録された試合結果はありません。</p>
+                    </div>`;
                 return;
             }
 
             matches.forEach(m => {
-                // 勝敗によるスコアの色分け
-                let resultText = "分";
-                let resultClass = "bg-gray-600";
-                if (m.scoreTakao > m.scoreOpponent) { resultText = "勝"; resultClass = "bg-emerald-600"; }
-                else if (m.scoreTakao < m.scoreOpponent) { resultText = "敗"; resultClass = "bg-red-600"; }
+                let resultText = "DRAW";
+                let resultClass = "bg-slate-600 text-slate-100 border border-slate-500/30";
+                if (m.scoreTakao > m.scoreOpponent) { 
+                    resultText = "WIN"; 
+                    resultClass = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
+                } else if (m.scoreTakao < m.scoreOpponent) { 
+                    resultText = "LOSE"; 
+                    resultClass = "bg-rose-500/10 text-rose-400 border border-rose-500/30"; 
+                }
 
                 const matchHtml = `
-                    <div class="bg-[#1c2541] rounded-lg shadow-lg border border-gray-700 overflow-hidden text-xs">
-                        <!-- カードヘッダー (日付と勝敗バッジ) -->
-                        <div class="bg-[#111a36] px-3 py-2 flex justify-between items-center border-b border-gray-800">
-                            <span class="font-bold text-gray-400">${m.date}</span>
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold text-white ${resultClass}">${resultText}</span>
+                    <div class="bg-[#1c2541] rounded-2xl shadow-xl border border-slate-700/40 overflow-hidden text-xs">
+                        <!-- カードヘッダー -->
+                        <div class="bg-[#111a36] px-4 py-2.5 flex justify-between items-center border-b border-slate-700/30">
+                            <span class="font-extrabold text-slate-300 tracking-wide">${m.date}</span>
+                            <span class="px-2 py-0.5 rounded text-[9px] font-black tracking-wider ${resultClass}">${resultText}</span>
                         </div>
-                        <!-- スコア表示 -->
-                        <div class="p-3 flex justify-between items-center bg-[#152244]/50 border-b border-gray-800/50">
-                            <div class="w-2/5 text-right font-bold text-sm text-blue-400 pr-2">高尾SC</div>
-                            <div class="w-1/5 text-center font-black text-lg bg-gray-900/60 py-1 rounded border border-gray-800 text-yellow-400">
-                                ${m.scoreTakao} - ${m.scoreOpponent}
+                        <!-- スコア対戦部分 -->
+                        <div class="p-4 flex justify-between items-center bg-[#152244]/20 border-b border-slate-700/20">
+                            <div class="w-2/5 text-right font-black text-sm text-sky-400 truncate pr-1">高尾SC</div>
+                            <div class="w-1/5 text-center font-black text-lg bg-[#0f172a] py-1 rounded-xl border border-slate-700/60 text-amber-400 shadow-inner px-2 tracking-tighter">
+                                ${m.scoreTakao}-${m.scoreOpponent}
                             </div>
-                            <div class="w-2/5 text-left font-bold text-sm text-gray-200 pl-2 truncate">${m.opponent}</div>
+                            <div class="w-2/5 text-left font-black text-sm text-slate-200 truncate pl-1">${m.opponent}</div>
                         </div>
-                        <!-- 詳細情報 (得点者・GK) -->
-                        <div class="p-3 space-y-1.5 bg-[#1a233d]/30 text-gray-300">
-                            <div class="flex items-start">
-                                <span class="font-semibold text-yellow-500/90 w-16 shrink-0">⚽ 得点者:</span>
-                                <span class="text-gray-200">${m.scorers}</span>
+                        <!-- 詳細テキスト部分 -->
+                        <div class="p-4 space-y-2 bg-[#1a233d]/20 text-slate-300 border-t border-slate-700/10">
+                            <div class="flex items-start gap-2">
+                                <span class="font-bold text-amber-400/90 w-14 shrink-0">⚽ 得点者:</span>
+                                <span class="text-slate-200 font-medium">${m.scorers}</span>
                             </div>
-                            <div class="flex items-start">
-                                <span class="font-semibold text-emerald-500/90 w-16 shrink-0">🧤 GK:</span>
-                                <span class="text-gray-200">${m.gk}</span>
+                            <div class="flex items-start gap-2">
+                                <span class="font-bold text-sky-400/90 w-14 shrink-0">🧤 GK:</span>
+                                <span class="text-slate-200 font-medium">${m.gk}</span>
                             </div>
                         </div>
                     </div>
@@ -174,24 +186,4 @@
             });
         }
 
-        // 日付の表記を「11月8日(日)」のように変換
         function formatDate(dateStr) {
-            if (!dateStr) return "";
-            const date = new Date(dateStr);
-            const m = date.getMonth() + 1;
-            const d = date.getDate();
-            const dayList = ["日", "月", "火", "水", "木", "金", "土"];
-            const day = dayList[date.getDay()];
-            return `${m}月${d}日(${day})`;
-        }
-
-        // 全データ削除
-        function clearAllMatches() {
-            if (confirm("これまでに登録した全ての試合結果を削除しますか？")) {
-                localStorage.removeItem('generic_soccer_matches');
-                displayMatches();
-            }
-        }
-    </script>
-</body>
-</html>
