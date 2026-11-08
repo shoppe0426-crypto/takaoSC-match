@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高尾SC 試合結果速報ツール</title>
+    <!-- デザインを綺麗にするためのTailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0b132b; color: #f8fafc; }
+        ::placeholder { color: #64748b !important; opacity: 1; }
+    </style>
+</head>
+<body class="p-4 font-sans max-w-md mx-auto">
+
+    <!-- ヘッダー -->
+    <div class="text-center my-6">
+        <h1 class="text-2xl font-black tracking-wider text-amber-400 drop-shadow-md">TAKAO SC</h1>
+        <p class="text-[11px] uppercase tracking-widest text-slate-400 font-bold mt-1">Match Result Bulletin</p>
+    </div>
+
+    <!-- 試合登録フォームエリア -->
+    <div class="bg-[#1c2541] rounded-2xl p-5 mb-6 shadow-2xl border border-slate-700/50">
+        <div class="flex items-center gap-2 mb-4 border-b border-slate-700/60 pb-2">
+            <span id="formIcon text-lg">📝</span>
+            <h2 id="formTitle" class="font-extrabold text-sm text-slate-200">新しい試合の登録</h2>
+            <!-- 編集キャンセルボタン (隠し) -->
+            <button id="cancelEditBtn" onclick="cancelEdit()" class="hidden ml-auto text-[10px] text-slate-400 border border-slate-600 px-2 py-0.5 rounded bg-slate-800">編集を中止</button>
+        </div>
+        
+        <div class="space-y-4 text-xs">
+            <input type="hidden" id="editingMatchId" value="">
+            
+            <!-- 試合日入力 -->
+            <div>
+                <label class="block text-slate-400 mb-1 font-bold">試合日</label>
+                <input type="date" id="matchDate" class="w-full p-2.5 bg-[#0f172a] border border-slate-600 rounded-lg text-white font-bold focus:outline-none focus:border-amber-400 text-sm">
+            </div>
+
+            <!-- 対戦カード入力 -->
+            <div class="bg-[#111a36] p-4 rounded-xl border border-slate-800 flex items-center justify-between gap-3 shadow-inner">
+                <!-- 高尾SC側 -->
+                <div class="w-2/5 text-center">
+                    <span class="block font-black text-sm text-sky-400 tracking-wide mb-1.5">高尾SC</span>
+                    <input type="number" id="scoreTakao" placeholder="0" class="w-16 p-2 text-center bg-[#0f172a] border border-slate-600 rounded-lg font-black text-xl text-white focus:outline-none focus:border-sky-400">
+                </div>
+                
+                <div class="text-slate-500 font-black text-xs tracking-tighter mt-4">VS</div>
+                
+                <!-- 相手チーム側 -->
+                <div class="w-2/5 text-center">
+                    <input type="text" id="opponentName" placeholder="相手チーム名" class="w-full p-1.5 text-center bg-[#0f172a] border border-slate-600 rounded-md text-white font-bold text-xs focus:outline-none focus:border-amber-400 placeholder-slate-500">
+                    <input type="number" id="scoreOpponent" placeholder="0" class="w-16 p-2 mt-1.5 text-center bg-[#0f172a] border border-slate-600 rounded-lg font-black text-xl text-white focus:outline-none focus:border-amber-400">
+                </div>
+            </div>
+
+            <!-- 詳細情報入力 -->
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-slate-400 mb-1 font-bold">⚽ 高尾SC 得点者</label>
+                    <input type="text" id="goalScorers" placeholder="例：サトシ2、カケル" class="w-full p-2.5 bg-[#0f172a] border border-slate-600 rounded-lg text-white focus:outline-none focus:border-amber-400 placeholder-slate-500">
+                </div>
+                <div>
+                    <label class="block text-slate-400 mb-1 font-bold">🧤 GK (ゴールキーパー)</label>
+                    <input type="text" id="goalkeeper" placeholder="例：ツバサ(前半)、リク(後半)" class="w-full p-2.5 bg-[#0f172a] border border-slate-600 rounded-lg text-white focus:outline-none focus:border-amber-400 placeholder-slate-500">
+                </div>
+            </div>
+
+            <!-- 追加/修正ボタン -->
+            <button id="submitBtn" onclick="saveMatch()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-[#0b132b] font-black rounded-xl shadow-lg transition-all text-sm tracking-wider mt-2 uppercase">
+                ＋ 試合結果を追加する
+            </button>
+        </div>
+    </div>
+
+    <!-- 日付インデックス（振り返りフィルター）メニュー -->
+    <div class="mb-6 bg-[#1c2541]/40 rounded-xl p-3 border border-slate-800">
+        <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 px-1">📅 日付インデックス (日付で振り返り)</label>
+        <div id="dateFilters" class="flex flex-wrap gap-1.5 text-xs">
+            <!-- JavaScriptで登録日一覧がここに自動で並びます -->
+        </div>
+    </div>
+
+    <!-- 試合速報 タイムライン一覧 -->
+    <div class="flex justify-between items-end mb-4 px-1">
+        <div class="flex items-center gap-2">
+            <span class="text-base">📊</span>
+            <h2 id="timelineHeaderTitle" class="text-base font-black text-slate-200">全試合結果一覧</h2>
+        </div>
+        <button onclick="clearAllMatches()" class="text-[10px] text-red-400 font-bold border border-red-900/40 px-2 py-1 rounded-md bg-red-950/10 hover:bg-red-950/40 transition-colors">全削除</button>
+    </div>
+    
+    <!-- タイムライン表示エリア -->
+    <div id="matchTimeline" class="space-y-4 mb-16">
+        <!-- ここに試合カードが入ります -->
+    </div>
+
+    <!-- 記録・動的処理用ロジック -->
+    <script>
+        let currentFilterDate = "all"; // 現在の絞り込み状態
+
+        window.onload = function() {
+            initDateInput();
+            displayMatches();
+        }
+
+        function initDateInput() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            document.getElementById('matchDate').value = `${yyyy}-${mm}-${dd}`;
+        }
+
+        // 保存と上書き修正を共通化
+        function saveMatch() {
+            const idInput = document.getElementById('editingMatchId').value;
+            const date = document.getElementById('matchDate').value;
+            const scoreTakao = document.getElementById('scoreTakao').value;
+            const opponent = document.getElementById('opponentName').value;
+            const scoreOpponent = document.getElementById('scoreOpponent').value;
+            const scorers = document.getElementById('goalScorers').value;
+            const gk = document.getElementById('goalkeeper').value;
+
+            if (!date || scoreTakao === "" || !opponent || scoreOpponent === "") {
+                alert("試合日、相手チーム名、スコアは必須項目です。");
+                return;
+            }
+
+            let currentMatches = JSON.parse(localStorage.getItem('generic_soccer_matches')) || [];
+
+            if (idInput) {
+                // 【訂正（編集）モード】データを上書き
+                const matchId = parseInt(idInput);
+                const idx = currentMatches.findIndex(m => m.id === matchId);
+                if (idx !== -1) {
+                    currentMatches[idx].date = formatDate(date);
+                    currentMatches[idx].rawDate = date;
+                    currentMatches[idx].scoreTakao = parseInt(scoreTakao);
+                    currentMatches[idx].opponent = opponent;
+                    currentMatches[idx].scoreOpponent = parseInt(scoreOpponent);
+                    currentMatches[idx].scorers = scorers || "ー";
+                    currentMatches[idx].gk = gk || "ー";
+                }
+                cancelEdit(); // フォームを通常モードに戻す
+            } else {
+                // 【新規追加モード】
+                const matchData = {
+                    id: Date.now(),
+                    date: formatDate(date),
+                    rawDate: date,
+                    scoreTakao: parseInt(scoreTakao),
+                    opponent: opponent,
+                    scoreOpponent: parseInt(scoreOpponent),
+                    scorers: scorers || "ー",
+                    gk: gk || "ー"
+                };
+                currentMatches.unshift(matchData);
+                // 入力欄をクリア（連続入力しやすいよう日付と相手名は残す）
+                document.getElementById('scoreTakao').value = "";
+                document.getElementById('scoreOpponent').value = "";
+                document.getElementById('goalScorers').value = "";
+                document.getElementById('goalkeeper').value = "";
+            }
+
+            localStorage.setItem('generic_soccer_matches', JSON.stringify(currentMatches));
+            displayMatches();
+        }
+
+        // 試合データを画面に描画・日付インデックスの更新
+        function displayMatches() {
+            const matches = JSON.parse(localStorage.getItem('generic_soccer_matches')) || [];
+            
+            // 1. 日付インデックス(フィルターボタン)の自動生成
+            updateDateFilters(matches);
+
+            // 2. タイムラインの描画
+            const timeline = document.getElementById('matchTimeline');
+            timeline.innerHTML = '';
+
+            // フィルターの適用
+            const filteredMatches = currentFilterDate === "all" 
+                ? matches 
+                : matches.filter(m => m.rawDate === currentFilterDate);
+
+            // ヘッダータイトルの変更
+            const headerTitle = document.getElementById('timelineHeaderTitle');
+            if (currentFilterDate === "all") {
+                headerTitle.innerText = "全試合結果一覧";
+            } else {
+                const displayDate = matches.find(m => m.rawDate === currentFilterDate)?.date || "";
+                headerTitle.innerText = `${displayDate} の試合結果`;
+            }
+
+            if (filteredMatches.length === 0) {
+                timeline.innerHTML = `
+                    <div class="text-center py-10 bg-[#1c2541]/20 rounded-2xl border border-dashed border-slate-700/60">
+                        <p class="text-xs text-slate-500 font-bold">該当する試合結果はありません。</p>
+                    </div>`;
+                return;
+            }
+
+            filteredMatches.forEach(m => {
+                let resultText = "DRAW";
+                let resultClass = "bg-slate-600 text-slate-100 border border-slate-500/30";
+                if (m.scoreTakao > m.scoreOpponent) { 
+                    resultText = "WIN"; 
+                    resultClass = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30"; 
+                } else if (m.scoreTakao < m.scoreOpponent) { 
+                    resultText = "LOSE"; 
+                    resultClass = "bg-rose-500/10 text-rose-400 border border-rose-500/30"; 
+                }
+
+                const matchHtml = `
+                    <div class="bg-[#1c2541] rounded-2xl shadow-xl border border-slate-700/40 overflow-hidden text-xs relative">
+                        <div class="bg-[#111a36] px-4 py-2.5 flex justify-between items-center border-b border-slate-700/30">
+                            <span class="font-extrabold text-slate-300 tracking-wide">${m.date}</span>
+                            <div class="flex items-center gap-3">
+                                <span class="px-2 py-0.5 rounded text-[9px] font-black tracking-wider ${resultClass}">${resultText}</span>
+                                <button onclick="deleteMatch(${m.id})" class="text-slate-500 hover:text-red-400 text-sm font-bold pl-1 font-mono">×</button>
+                            </div>
+                        </div>
+                        <div class="p-4 flex justify-between items-center bg-[#152244]/20 border-b border-slate-700/20">
+                            <div class="w-2/5 text-right font-black text-sm text-sky-400 truncate pr-1">高尾SC</div>
+                            <div class="w-1/5 text-center font-black text-lg bg-[#0f172a] py-1 rounded-xl border border-slate-700/60 text-amber-400 shadow-inner px-2 tracking-tighter">
+                                ${m.scoreTakao}-${m.scoreOpponent}
+                            </div>
+                            <div class="w-2/5 text-left font-black text-sm text-slate-200 truncate pl-1">${m.opponent}</div>
+                        </div>
+                        <div class="p-4 space-y-2 bg-[#1a233d]/20 text-slate-300 border-t border-slate-700/10 flex justify-between items-end">
+                            <div class="space-y-2 flex-1">
+                                <div class="flex items-start gap-2">
+                                    <span class="font-bold text-amber-400/90 w-14 shrink-0">⚽ 得点者:</span>
+                                    <span class="text-slate-200 font-medium">${m.scorers}</span>
+                                </div>
+                                <div class="flex items-start gap-2">
+                                    <span class="font-bold text-sky-400/90 w-14 shrink-0">🧤 GK:</span>
+                                    <span class="text-slate-200 font-medium">${m.gk}</span>
+                                </div>
+                            </div>
+                            <button onclick="editMatch(${m.id})" class="text-[10px] text-amber-400/80 font-bold border border-amber-500/20 px-2 py-1 rounded bg-amber-500/5 hover:bg-amber-500/20 tracking-wider shrink-0 ml-2">✏️ 編集</button>
+                        </div>
+                    </div>
+                `;
+                timeline.innerHTML += matchHtml;
+            });
+        }
+
+        // 日付一覧メニューの自動更新
+        function updateDateFilters(matches) {
+            const filterContainer = document.getElementById('dateFilters');
+            filterContainer.innerHTML = '';
+
+            // 全て表示ボタン
+            const allBtnClass = currentFilterDate === "all" ? "bg-amber-500 text-[#0b132b] font-black" : "bg-[#0f172a] text-slate-300 border border-slate-700";
+            filterContainer.innerHTML += `<button onclick="filterByDate('all')" class="px-2.5 py-1 rounded-md font-bold transition-all text-[11px] ${allBtnClass}">全てみる</button>`;
+
+            // 重複のない登録日付リストを作成
+            const uniqueDates = [];
+            matches.forEach(m => {
+                if (!uniqueDates.some(d => d.rawDate === m.rawDate)) {
+                    uniqueDates.push({ rawDate: m.rawDate, formatted: m.date.replace(/ \(.+\)/, '') }); // 曜日を除いた月日
+                }
+            });
+            // 日付順にソート (新しい順)
+            uniqueDates.sort((a, b) => b.rawDate.localeCompare(a.rawDate));
+
+            uniqueDates.forEach(d => {
+                const btnClass = currentFilterDate === d.rawDate ? "bg-amber-500 text-[#0b132b] font-black" : "bg-[#0f172a] text-slate-300 border border-slate-700";
+                filterContainer.innerHTML += `<button onclick="filterByDate('${d.rawDate}')" class="px-2.5 py-1 rounded-md font-bold transition-all text-[11px] ${btnClass}">${d.formatted}</button>`;
+            });
+        }
+
+        // 日付での絞り込み切り替え
+        function filterByDate(dateStr) {
+            currentFilterDate = dateStr;
+            displayMatches();
+        }
+
+        // 選択した特定の1試合のみを削除
+        function deleteMatch(matchId) {
+            if (confirm("この試合結果を削除しますか？")) {
+                let currentMatches = JSON.parse(localStorage.getItem('generic_soccer_matches')) || [];
+                currentMatches = currentMatches.filter(m => m.id !== matchId);
+                localStorage.setItem('generic_soccer_matches', JSON.stringify(currentMatches));
+                
+                // もし絞り込み中の日付のデータが全部消えたらフィルターをリセット
+                if (currentFilterDate !== "all" && !currentMatches.some(m => m.rawDate === currentFilterDate)) {
+                    currentFilterDate = "all";
+                }
+                displayMatches();
+            }
+        }
+
+        // 試合データの訂正（編集）モード起動
+        function editMatch(matchId) {
+            const matches = JSON.parse(localStorage.getItem('generic_soccer_matches')) || [];
+            const target = matches.find(m => m.id === matchId);
+            
+            if (target) {
+                // フォームに値をセット
+                document.getElementById('editingMatchId').value = target.id;
+                document.getElementById('matchDate').value = target.rawDate;
+                document.getElementById('scoreTakao').value = target.scoreTakao;
+                document.getElementById('opponentName').value = target.opponent;
+                document.getElementById('scoreOpponent').value = target.scoreOpponent;
+                document.getElementById('goalScorers').value = target.scorers === "ー" ? "" : target.scorers;
+                document.getElementById('goalkeeper').value = target.gk === "ー" ? "" : target.gk;
+
+                // フォームの見た目を「修正モード」に変更
+                document.getElementById('formTitle').innerText = "試合結果の訂正・編集";
+                document.getElementById('submitBtn').innerText = "🔧 修正内容を上書き保存する";
+                document.getElementById('submitBtn').classList.remove('from-amber-500', 'to-amber-600');
+                document.getElementById('submitBtn').classList.add('from-sky-500', 'to-sky-600');
+                document.getElementById('cancelEditBtn').classList.remove('hidden');
+
+                // 画面を一番上までスムーズにスクロールさせて入力しやすくする
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // 編集のキャンセル
+        function cancelEdit() {
+            document.getElementById('editingMatchId').value = "";
+            initDateInput();
+            document.getElementById('scoreTakao').value = "";
+            document.getElementById('opponentName').value = "";
+            document.getElementById('scoreOpponent').value = "";
+            document.getElementById('goalScorers').value = "";
+            document.getElementById('goalkeeper').value = "";
+
+            // 通常モードに戻す
+            document.getElementById('formTitle').innerText = "新しい試合の登録";
+            document.getElementById('submitBtn').innerText = "＋ 試合結果を追加する";
+            document.getElementById('submitBtn').classList.remove('from-sky-500', 'to-sky-600');
+            document.getElementById('submitBtn').classList.add('from-amber-500', 'to-amber-600');
+            document.getElementById('cancelEditBtn').classList.add('hidden');
+        }
+
+        // 日付の表記を変換
+        function formatDate(dateStr) {
+            if (!dateStr) return "";
+            const date = new Date(dateStr);
+            const m = date.getMonth() + 1;
+            const d = date.getDate();
+            const dayList = ["日", "月", "火", "水", "木", "金", "土"];
+            const day = dayList[date.getDay()];
+            return `${m}月${d}日 (${day})`;
+        }
+
+        // 全データ削除
+        function clearAllMatches() {
+            if (confirm("これまでに登録した全ての試合結果を完全に削除しますか？")) {
+                localStorage.removeItem('generic_soccer_matches');
+                currentFilterDate = "all";
+                displayMatches();
+            }
+        }
+    </script>
+</body>
+</html>
