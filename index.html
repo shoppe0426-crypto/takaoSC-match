@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高尾SC 試合結果速報ツール</title>
     <!-- デザインを劇的に綺麗にするためのTailwind CSS -->
-    <script src="https://tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #0b132b; color: #f8fafc; }
         /* 入力フォームのプレースホルダーの色調整 */
@@ -187,3 +187,21 @@
         }
 
         function formatDate(dateStr) {
+            if (!dateStr) return "";
+            const date = new Date(dateStr);
+            const m = date.getMonth() + 1;
+            const d = date.getDate();
+            const dayList = ["日", "月", "火", "水", "木", "金", "土"];
+            const day = dayList[date.getDay()];
+            return `${m}月${d}日 (${day})`;
+        }
+
+        function clearAllMatches() {
+            if (confirm("これまでに登録した全ての試合結果を削除しますか？")) {
+                localStorage.removeItem('generic_soccer_matches');
+                displayMatches();
+            }
+        }
+    </script>
+</body>
+</html>
