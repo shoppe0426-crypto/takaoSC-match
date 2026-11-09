@@ -127,11 +127,37 @@ input[type="text"], input[type="date"], select, input[type="number"] {
     margin-bottom: 15px;
 }
 .btn-cancel:hover { background-color: #dc2626; }
+
+/* 試合結果リストアイテムのスタイル拡張 */
 .match-list-item {
     border-left: 4px solid var(--accent-color);
     background: #f9fafb;
-    padding: 12px;
+    padding: 15px;
     border-radius: 0 8px 8px 0;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     font-size: 14px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.match-item-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-end;
+}
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+    width: auto;
+    border-radius: 4px;
+}
+.btn-edit { background-color: #059669; }
+.btn-edit:hover { background-color: #047857; }
+.btn-delete { background-color: #dc2626; }
+.btn-delete:hover { background-color: #b91c1c; }
+.match-details {
+    color: #4b5563;
+    font-size: 13px;
+    margin-top: 5px;
+    line-height: 1.4;
 }
