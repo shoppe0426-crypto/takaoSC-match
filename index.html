@@ -7,14 +7,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="container">
     <header>
         <h1>TAKAO SC</h1>
         <p>Match Result Bulletin</p>
     </header>
 
-    <!-- 試合の入力フォーム -->
     <div class="card">
         <h2 id="form-title">📝 新しい試合の登録</h2>
         <button class="btn btn-cancel hidden" id="btn-cancel-edit">編集を中止してクリア</button>
@@ -27,61 +25,53 @@
         <div class="form-group">
             <label>試合の種類</label>
             <div class="radio-group">
-                <label><input type="radio" name="match-type" value="tm" checked> トレーニングマッチ</label>
+                <label><input type="radio" name="match-type" value="tm" checked> TM</label>
                 <label><input type="radio" name="match-type" value="invitation"> 招待試合</label>
                 <label><input type="radio" name="match-type" value="tournament"> 大会</label>
             </div>
         </div>
 
-        <!-- 大会名・試合名入力枠 -->
         <div class="form-group hidden" id="tournament-name-group">
             <label for="tournament-name">大会名・試合名</label>
-            <input type="text" id="tournament-name" placeholder="例：〇〇カップ、春季大会">
+            <input type="text" id="tournament-name" placeholder="例：MTO招待 4年生大会">
         </div>
 
         <div class="match-vs">
             <div class="team-box">
                 <div class="team-name">高尾SC</div>
-                <input type="number" class="score-input" id="score-home" value="0" min="0" readonly>
+                <input type="number" class="score-input" id="score-home" placeholder="0" readonly>
             </div>
             <div class="vs-text">VS</div>
             <div class="team-box">
-                <input type="text" id="opponent-name" placeholder="対戦相手チーム" style="margin-bottom:5px; text-align:center;">
-                <input type="number" class="score-input" id="score-away" value="0" min="0">
+                <input type="text" id="opponent-name" placeholder="対戦相手チーム" style="margin-bottom:8px; text-align:center;">
+                <input type="number" class="score-input" id="score-away" placeholder="0" min="0">
             </div>
         </div>
 
         <div class="form-group">
-            <label>⚽ 高尾SC 得点者と個人得点 (総得点に自動加算)</label>
-            <div id="scorer-container">
-                <!-- JavaScriptで初期枠が生成されます -->
-            </div>
-            <button class="btn btn-outline" id="btn-add-scorer" type="button" style="padding: 8px 15px; font-size: 14px; width: auto; margin-top: 5px;">＋ 得点者の入力枠を追加する (最大10枠)</button>
+            <label>⚽ 得点者と個人得点 (自動加算)</label>
+            <div id="scorer-container"></div>
+            <button class="btn btn-outline" id="btn-add-scorer" type="button">＋ 入力枠を追加する (最大10枠)</button>
         </div>
 
         <div class="form-group">
-            <label for="gk-name">🧤 GK (ゴールキーパー)</label>
+            <label for="gk-name">🧤 GK</label>
             <input type="text" id="gk-name" placeholder="GKの選手名">
         </div>
 
-        <button class="btn" id="btn-submit-match" type="button">＋ 試合結果を追加する</button>
+        <button class="btn btn-submit" id="btn-submit-match" type="button">＋ 試合結果を追加する</button>
     </div>
 
-    <!-- 全試合結果一覧 -->
     <div class="card">
         <h2>📊 全試合結果一覧</h2>
-        <div class="form-group">
-            <label for="date-index">📅 日付インデックス</label>
-            <select id="date-index">
-                <option value="all">すべて表示</option>
-            </select>
-        </div>
         <div id="match-list">
             <p style="color:#9ca3af; text-align:center;" id="empty-message">登録された試合はありません。</p>
         </div>
     </div>
 </div>
 
-<script type="module" src="script.js"></script>
+<script src="https://gstatic.com"></script>
+<script src="https://gstatic.com"></script>
+<script src="script.js"></script>
 </body>
 </html>
