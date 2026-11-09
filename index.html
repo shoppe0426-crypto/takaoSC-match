@@ -14,10 +14,10 @@
         <p>Match Result Bulletin</p>
     </header>
 
-    <!-- 新しい試合の登録 -->
+    <!-- 試合の入力フォーム -->
     <div class="card">
-        <h2>📝 新しい試合の登録</h2>
-        <button class="btn btn-cancel" id="btn-cancel-edit">編集を中止</button>
+        <h2 id="form-title">📝 新しい試合の登録</h2>
+        <button class="btn btn-cancel hidden" id="btn-cancel-edit">編集を中止してクリア</button>
         
         <div class="form-group">
             <label for="match-date">試合日</label>
@@ -64,7 +64,7 @@
             <input type="text" id="gk-name" placeholder="GKの選手名">
         </div>
 
-        <button class="btn" id="btn-add-match" type="button">＋ 試合結果を追加する</button>
+        <button class="btn" id="btn-submit-match" type="button">＋ 試合結果を追加する</button>
     </div>
 
     <!-- 全試合結果一覧 -->
