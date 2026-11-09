@@ -128,7 +128,6 @@ input[type="text"], input[type="date"], select, input[type="number"] {
 }
 .btn-cancel:hover { background-color: #dc2626; }
 
-/* 試合結果リストアイテムのスタイル拡張 */
 .match-list-item {
     border-left: 4px solid var(--accent-color);
     background: #f9fafb;
