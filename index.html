@@ -4,145 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>高尾SC 試合結果速報ツール</title>
-    <style>
-        :root {
-            --primary-color: #1e3a8a;
-            --accent-color: #f59e0b;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
-        }
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        header {
-            text-align: center;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        header h1 { margin: 0; font-size: 24px; letter-spacing: 1px; }
-        header p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.8; }
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        h2 {
-            font-size: 18px;
-            margin-top: 0;
-            border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 8px;
-            color: var(--primary-color);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        input[type="text"], input[type="date"], select, input[type="number"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        .radio-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 5px;
-        }
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: normal;
-            cursor: pointer;
-        }
-        .hidden {
-            display: none !important;
-        }
-        .match-vs {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f9fafb;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .team-box {
-            text-align: center;
-            flex: 1;
-        }
-        .team-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
-        .vs-text { font-weight: bold; color: #9ca3af; font-size: 18px; }
-        .score-input {
-            width: 70px !important;
-            text-align: center;
-            font-size: 24px !important;
-            font-weight: bold;
-        }
-        .scorer-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-        .scorer-row input[type="text"] { flex: 2; }
-        .scorer-row input[type="number"] { flex: 1; }
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            width: 100%;
-            transition: background 0.2s;
-        }
-        .btn:hover { background-color: #172554; }
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
-            margin-bottom: 15px;
-        }
-        .btn-outline:hover { background-color: #eff6ff; }
-        .btn-cancel {
-            background-color: #ef4444;
-            margin-bottom: 15px;
-        }
-        .btn-cancel:hover { background-color: #dc2626; }
-        .match-list-item {
-            border-left: 4px solid var(--accent-color);
-            background: #f9fafb;
-            padding: 12px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -152,12 +14,13 @@
         <p>Match Result Bulletin</p>
     </header>
 
+    <!-- 新しい試合の登録 -->
     <div class="card">
         <h2>📝 新しい試合の登録</h2>
         <button class="btn btn-cancel" id="btn-cancel-edit">編集を中止</button>
         
         <div class="form-group">
-            <label>試合日</label>
+            <label for="match-date">試合日</label>
             <input type="date" id="match-date">
         </div>
 
@@ -170,8 +33,9 @@
             </div>
         </div>
 
+        <!-- 大会名・試合名入力枠 -->
         <div class="form-group hidden" id="tournament-name-group">
-            <label>大会名・試合名</label>
+            <label for="tournament-name">大会名・試合名</label>
             <input type="text" id="tournament-name" placeholder="例：〇〇カップ、春季大会">
         </div>
 
@@ -189,22 +53,25 @@
 
         <div class="form-group">
             <label>⚽ 高尾SC 得点者と個人得点 (総得点に自動加算)</label>
-            <div id="scorer-container"></div>
-            <button class="btn btn-outline" id="btn-add-scorer" style="padding: 8px 15px; font-size: 14px; width: auto; margin-top: 5px;">＋ 得点者の入力枠を追加する (最大10枠)</button>
+            <div id="scorer-container">
+                <!-- JavaScriptで初期枠が生成されます -->
+            </div>
+            <button class="btn btn-outline" id="btn-add-scorer" type="button" style="padding: 8px 15px; font-size: 14px; width: auto; margin-top: 5px;">＋ 得点者の入力枠を追加する (最大10枠)</button>
         </div>
 
         <div class="form-group">
-            <label>🧤 GK (ゴールキーパー)</label>
+            <label for="gk-name">🧤 GK (ゴールキーパー)</label>
             <input type="text" id="gk-name" placeholder="GKの選手名">
         </div>
 
-        <button class="btn" id="btn-add-match">＋ 試合結果を追加する</button>
+        <button class="btn" id="btn-add-match" type="button">＋ 試合結果を追加する</button>
     </div>
 
+    <!-- 全試合結果一覧 -->
     <div class="card">
         <h2>📊 全試合結果一覧</h2>
         <div class="form-group">
-            <label>📅 日付インデックス</label>
+            <label for="date-index">📅 日付インデックス</label>
             <select id="date-index">
                 <option value="all">すべて表示</option>
             </select>
@@ -215,98 +82,6 @@
     </div>
 </div>
 
-<script>
-    const MAX_SCORERS = 10;
-    let currentScorerCount = 0;
-    const scorerContainer = document.getElementById('scorer-container');
-
-    document.querySelectorAll('input[name="match-type"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-            const group = document.getElementById('tournament-name-group');
-            if (e.target.value === 'invitation' || e.target.value === 'tournament') {
-                group.classList.remove('hidden');
-            } else {
-                group.classList.add('hidden');
-                document.getElementById('tournament-name').value = '';
-            }
-        });
-    });
-
-    function addScorerRow() {
-        if (currentScorerCount >= MAX_SCORERS) {
-            alert('得点者の入力枠は最大10枠までです。');
-            return;
-        }
-        currentScorerCount++;
-
-        const row = document.createElement('div');
-        row.className = 'scorer-row';
-        row.innerHTML = `
-            <input type="text" class="scorer-name" placeholder="選手名 (${currentScorerCount})">
-            <input type="number" class="scorer-points" value="0" min="0" placeholder="得点">
-        `;
-        scorerContainer.appendChild(row);
-        row.querySelector('.scorer-points').addEventListener('input', calculateTotalScore);
-    }
-
-    function calculateTotalScore() {
-        let total = 0;
-        document.querySelectorAll('.scorer-points').forEach(input => {
-            const val = parseInt(input.value, 10);
-            if (!isNaN(val)) {
-                total += val;
-            }
-        });
-        document.getElementById('score-home').value = total;
-    }
-
-    function initScorers() {
-        scorerContainer.innerHTML = '';
-        currentScorerCount = 0;
-        for (let i = 0; i < 3; i++) {
-            addScorerRow();
-        }
-    }
-
-    document.getElementById('btn-add-scorer').addEventListener('click', (e) => {
-        e.preventDefault();
-        addScorerRow();
-    });
-
-    document.getElementById('btn-add-match').addEventListener('click', () => {
-        const date = document.getElementById('match-date').value || '未設定';
-        const opponent = document.getElementById('opponent-name').value || '未校名';
-        const homeScore = document.getElementById('score-home').value;
-        const awayScore = document.getElementById('score-away').value;
-        
-        let typeText = 'TM';
-        const typeVal = document.querySelector('input[name="match-type"]:checked').value;
-        if(typeVal === 'invitation') typeText = '招待試合';
-        if(typeVal === 'tournament') typeText = '大会';
-        
-        const tourName = document.getElementById('tournament-name').value;
-        const displayTitle = tourName ? `【${typeText}・${tourName}】` : `【${typeText}】`;
-
-        const emptyMsg = document.getElementById('empty-message');
-        if(emptyMsg) emptyMsg.remove();
-
-        const listItem = document.createElement('div');
-        listItem.className = 'match-list-item';
-listItem.innerHTML = <strong>${date} ${displayTitle}</strong><br>高尾SC ${homeScore} - ${awayScore} ${opponent};
-document.getElementById('match-list').prepend(listItem);
-alert('試合結果を記録しました');
-});
-document.getElementById('btn-cancel-edit').addEventListener('click', () => {
-if(confirm('入力をクリアして初期状態に戻しますか？')) {
-document.getElementById('match-date').value = '';
-document.getElementById('opponent-name').value = '';
-document.getElementById('score-away').value = '0';
-document.getElementById('tournament-name').value = '';
-document.getElementById('gk-name').value = '';
-document.querySelector('input[name="match-type"][value="tm"]').checked = true;
-document.getElementById('tournament-name-group').classList.add('hidden');
-initScorers();
-calculateTotalScore();
-}
-});
-initScorers();
+<script src="script.js"></script>
+</body>
+</html>
